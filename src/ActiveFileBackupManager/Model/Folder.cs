@@ -1,4 +1,6 @@
-﻿using ActiveFileBackupManager.Service;
+﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
+
+using ActiveFileBackupManager.Service;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;

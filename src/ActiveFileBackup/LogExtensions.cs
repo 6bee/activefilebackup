@@ -1,4 +1,6 @@
-﻿using log4net;
+﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
+
+using log4net;
 using log4net.Core;
 using System;
 using System.Diagnostics;

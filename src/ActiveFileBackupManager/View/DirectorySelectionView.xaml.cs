@@ -1,4 +1,6 @@
-﻿using ActiveFileBackupManager.Model;
+﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
+
+using ActiveFileBackupManager.Model;
 using ActiveFileBackupManager.ViewModel;
 using System;
 using System.Collections.Generic;
