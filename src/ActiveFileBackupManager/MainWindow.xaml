@@ -1,0 +1,36 @@
+﻿<Window x:Class="ActiveFileBackupManager.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:v="clr-namespace:ActiveFileBackupManager.View"
+        Title="Active File Backup Manager" 
+        Height="350" Width="525" MinHeight="200" MinWidth="350">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <TabControl Padding="0">
+            <TabItem Header="Folder selection">
+                <v:DirectorySelectionView DataContext="{Binding DirectorySelectionViewModel}" />
+            </TabItem>
+            <TabItem Header="Backup server">
+                <v:BackupServerConfigurationView DataContext="{Binding BackupServerConfigurationViewModel}" />
+            </TabItem>
+        </TabControl>
+
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="5" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="20" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <Button Grid.Column="1" Width="50" Content="Apply" Command="{Binding SaveCommand}" />
+            <Button Grid.Column="3" Width="50" Content="Reset" Command="{Binding ResetCommand}" />
+            <Button Grid.Column="5" Width="50" Content="Close" Click="CloseButton_Click" />
+        </Grid>
+    </Grid>
+</Window>
