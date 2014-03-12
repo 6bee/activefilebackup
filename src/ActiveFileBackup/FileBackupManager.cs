@@ -121,7 +121,7 @@ namespace ActiveFileBackup
         #endregion ctor
 
         #region File system watcher
-        
+
         // HELPER (WATCHER FACTORY)
         private bool CreateFileSystemWatcher(string path, bool recursive)
         {
@@ -308,25 +308,49 @@ namespace ActiveFileBackup
                 var message = "Initial backup started";
                 _log.Info(message);
                 message.WriteEventLog();
-                
-                var job = new FileBackupJob();
-                foreach (Configuration.Folder f in Config.Instance.FolderList)
-                {
-                    BackupDirectory(job, f.Path, f.Recursive);
-                }
 
-                message = "Initial backup finished";
-                _log.Info(message);
-                message.WriteEventLog();
+                try
+                {
+                    var job = new FileBackupJob();
+                    foreach (Configuration.Folder f in Config.Instance.FolderList)
+                    {
+                        if (!Directory.Exists(f.Path)) continue;
+
+                        BackupDirectory(job, f.Path, f.Recursive);
+                    }
+
+                    message = "Initial backup finished";
+                    _log.Info(message);
+                    message.WriteEventLog();
+                }
+                catch (Exception ex)
+                {
+                    message = "Initial backup failed";
+                    _log.Error(message, ex);
+                    message.WriteEventLog(ex);
+                }
             }
 
             private static void BackupDirectory(FileBackupJob job, string directory, bool recursive)
             {
-                if (!Directory.Exists(directory)) return;
                 if (IsIgnored(directory)) return;
-                
+
+                string[] files;
+                try
+                {
+                    files = Directory.GetFiles(directory);
+                }
+                catch (UnauthorizedAccessException ex)
+                {
+                    var message = string.Format("Initial backup failed for folder {0}", directory);
+                    _log.Error(message, ex);
+                    message.WriteEventLog(ex);
+
+                    return;
+                }
+
                 // backup files
-                foreach (var file in Directory.GetFiles(directory))
+                foreach (var file in files)
                 {
                     var dest = Path.Combine(Instance._backupDir, job.GetFileName(file));
                     try
@@ -343,7 +367,21 @@ namespace ActiveFileBackup
                 // backup recursively
                 if (recursive)
                 {
-                    foreach (var dir in Directory.GetDirectories(directory))
+                    string[] directories;
+                    try
+                    {
+                        directories = Directory.GetDirectories(directory);
+                    }
+                    catch (UnauthorizedAccessException ex)
+                    {
+                        var message = string.Format("Initial backup failed for subfolders of {0}", directory);
+                        _log.Error(message, ex);
+                        message.WriteEventLog(ex);
+
+                        return;
+                    }
+
+                    foreach (var dir in directories)
                     {
                         BackupDirectory(job, dir, recursive);
                     }
