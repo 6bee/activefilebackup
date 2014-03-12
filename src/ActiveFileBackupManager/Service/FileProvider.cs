@@ -31,22 +31,14 @@ namespace ActiveFileBackupManager.Service
 
             return Task.Factory.StartNew(() =>
             {
-                //try
-                //{
                 var list =
                     from d in directory.GetDirectories()
                     where !FileBackupManager.IsIgnored(d.FullName)
                        && (d.Attributes & FileAttributes.Offline) == 0
                        && (d.Attributes & FileAttributes.System) == 0
-                       && (d.Attributes & FileAttributes.ReadOnly) == 0
                        && (d.Attributes & FileAttributes.ReparsePoint) == 0
                     select d;
                 return list.ToList().AsEnumerable();
-                //}
-                //catch (UnauthorizedAccessException)
-                //{
-                //    return (IEnumerable<DirectoryInfo>)new DirectoryInfo[0];
-                //}
             });
         }
     }
